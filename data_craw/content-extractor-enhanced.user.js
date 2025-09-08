@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页列表数据提取器 (增强版 - 带预览功能)
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.5
 // @description  在任何页面上通过一个可交互的、可拖动的界面，输入多个CSS选择器，预览提取的数据，并将匹配到的内容导出为CSV表格文件。
 // @author       Kamjin3086
 // @license      MIT
@@ -105,9 +105,27 @@
             padding: 16px;
             font-size: 14px;
             line-height: 1.6;
-            background: white;
+            background: white !important;
+            color: #333 !important;
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
+        }
+        
+        #gm-extractor-panel .instructions * {
+            color: #333 !important;
+        }
+        
+        #gm-extractor-panel .instructions strong {
+            color: #2c3e50 !important;
+        }
+        
+        #gm-extractor-panel .instructions kbd {
+            background: #f0f0f0 !important;
+            color: #333 !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            border: 1px solid #ccc;
         }
         
         #gm-extractor-panel .instructions ul {
@@ -133,8 +151,8 @@
             margin-top: 15px;
             padding-top: 15px;
             font-size: 13px;
-            color: #6c757d;
-            background-color: #f8f9fa;
+            color: #333 !important;
+            background-color: #f8f9fa !important;
             padding: 12px;
             border-radius: 6px;
         }
@@ -1094,21 +1112,18 @@
         <div class="extractor-body">
             <details>
                 <summary>📖 如何获取选择器 (点击展开)</summary>
-                <div class="instructions">
-                    <ul>
-                        <li><b>第1步:</b> 在您想提取的文字上 (例如标题或名字)，点击鼠标<b>右键</b>，在弹出的菜单中选择 <strong>检查 (Inspect)</strong>。</li>
-                        <li><b>第2步:</b> 浏览器下方或右侧会弹出开发者工具，并且有一行代码是<b>高亮</b>状态。</li>
-                        <li><b>第3步:</b> 在这行<b>高亮的代码上</b>，再次点击鼠标<b>右键</b>。</li>
-                        <li><b>第4步:</b> 在弹出的新菜单中，依次选择 <strong>复制 (Copy)</strong> > <strong>复制选择器 (Copy selector)</strong>。</li>
-                        <li><b>第5步:</b> 回到本面板，将刚刚复制的内容粘贴到下面的输入框里即可。</li>
-                    </ul>
-                    <div class="pro-tip">
-                        <b>💡 小提示:</b> 
-                        <ul style="margin: 8px 0; padding-left: 20px;">
-                            <li><b>提取单行数据:</b> 右键点击某一行 → 复制选择器</li>
-                            <li><b>提取列表数据:</b> 右键点击某一行 → 复制选择器 → 点击"优化选择器"按钮，脚本会自动移除行号限制</li>
-                            <li><b>手动优化:</b> 如果选择器包含 <code>:nth-child(1)</code> 等行号，删除这部分即可获取所有行</li>
-                        </ul>
+                <div class="instructions" style="background: white; color: #333; padding: 12px; border-radius: 6px; border: 1px solid #e0e0e0;">
+                    <div style="margin-bottom: 12px;">
+                        <div style="margin-bottom: 8px; color: #333;"><strong style="color: #2c3e50;">第1步:</strong> 按 <kbd style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 12px;">F12</kbd> 打开开发者工具</div>
+                        <div style="margin-bottom: 8px; color: #333;"><strong style="color: #2c3e50;">第2步:</strong> 在目标文字上右键 → 选择"检查"</div>
+                        <div style="margin-bottom: 8px; color: #333;"><strong style="color: #2c3e50;">第3步:</strong> 开发者工具中右键高亮代码 → "复制" → "复制选择器"</div>
+                        <div style="margin-bottom: 8px; color: #333;"><strong style="color: #2c3e50;">第4步:</strong> 粘贴到下方输入框</div>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; border-left: 4px solid #4A90E2; margin-top: 8px;">
+                        <div style="font-weight: bold; margin-bottom: 6px; color: #2c3e50;">💡 使用技巧:</div>
+                        <div style="margin-bottom: 4px; color: #333;">• 单行数据: 直接复制选择器</div>
+                        <div style="margin-bottom: 4px; color: #333;">• 列表数据: 复制后点击"优化选择器"</div>
+                        <div style="color: #333;">• 手动优化: 删除选择器中的 :nth-child(1) 等行号</div>
                     </div>
                 </div>
             </details>
@@ -1119,8 +1134,8 @@
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
-                <div class="accumulation-info" id="accumulation-info">
-                    关闭 - 点击"预览和积累"只显示当前页面数据
+                <div class="accumulation-info" id="accumulation-info" style="font-size: 12px; color: #333; margin-top: 4px; background: white; padding: 4px 8px; border-radius: 4px; border: 1px solid #e0e0e0;">
+                    关闭 - 点击"预览数据"只显示当前页面数据
                 </div>
                 <button class="clear-btn" id="clear-accumulated-btn" style="display: none;">清空</button>
             </div>
@@ -1137,7 +1152,7 @@
         </div>
         <div class="extractor-footer">
             <div class="footer-actions">
-                <button id="preview-btn">👁️ 预览和积累</button>
+                <button id="preview-btn">👁️ 预览数据</button>
                 <button id="export-csv-btn">📥 导出CSV</button>
             </div>
         </div>
@@ -1151,8 +1166,8 @@
                 </div>
                 
                 <div class="group-form">
-                    <input type="text" id="group-name-input" placeholder="输入组名称（例如：商品列表）" maxlength="50">
-                    <button id="save-current-group-btn">💾 保存当前选择器组</button>
+                    <input type="text" id="group-name-input" placeholder="输入组名称（如：商品列表）" maxlength="50">
+                    <button id="save-current-group-btn">💾 保存当前组</button>
                 </div>
                 
                 <div class="group-list" id="group-list">
@@ -1328,7 +1343,7 @@
         row.innerHTML = `
             <div class="selector-input-row">
                 <button class="add-btn" title="在此行前添加选择器">+</button>
-                <input type="text" class="selector-input" placeholder="请从控制台复制选择器并粘贴" value="${initialValue}">
+                <input type="text" class="selector-input" placeholder="粘贴CSS选择器" value="${initialValue}">
                 <button class="remove-btn" title="移除此行">-</button>
             </div>
         `;
@@ -1808,7 +1823,7 @@ window.loadGroup = function(index) {
             row.innerHTML = `
                 <div class="selector-input-row">
                     <button class="add-btn" onclick="addSelectorRow()">+</button>
-                    <input type="text" class="selector-input" placeholder="请从控制台复制选择器并粘贴" value="${selector}">
+                    <input type="text" class="selector-input" placeholder="粘贴CSS选择器" value="${selector}">
                     <button class="remove-btn" onclick="this.parentElement.parentElement.remove()">-</button>
                 </div>
                 <div class="selector-optimize" style="display: none;">
@@ -1875,7 +1890,7 @@ window.addSelectorRow = function(value = '') {
         row.innerHTML = `
             <div class="selector-input-row">
                 <button class="add-btn" onclick="addSelectorRow()">+</button>
-                <input type="text" class="selector-input" placeholder="请从控制台复制选择器并粘贴" value="${value}">
+                <input type="text" class="selector-input" placeholder="粘贴CSS选择器" value="${value}">
                 <button class="remove-btn" onclick="this.parentElement.parentElement.remove()">-</button>
             </div>
             <div class="selector-optimize" style="display: none;">
