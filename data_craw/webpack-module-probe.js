@@ -119,8 +119,8 @@ const PROBE_CONFIG = {
     // 打印使用说明
     usage: (hits) => {
       Console.separator('使用说明');
-      console.log(`%c�� 找到 ${hits.length} 个匹配的模块`, Console.styles.success);
-      console.log(`%c�� 使用方法:`, Console.styles.info);
+      console.log(`%c 找到 ${hits.length} 个匹配的模块`, Console.styles.success);
+      console.log(`%c 使用方法:`, Console.styles.info);
       console.log(`%c   window.__probeHits__[0].mod  // 获取第一个模块`, Console.styles.info);
       console.log(`%c   window.__probeHits__[1].mod  // 获取第二个模块`, Console.styles.info);
       console.log(`%c   // 以此类推...`, Console.styles.info);
